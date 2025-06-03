@@ -1,0 +1,63 @@
+close all
+figure;
+set(gcf, 'Position', [100, 100, 1000, 800]); % Adjust figure size
+t = tiledlayout(4, 1, 'TileSpacing', 'compact', 'Padding', 'compact'); % Three plots stacked vertically
+
+% First Plot
+nexttile;
+hold on;
+load('Using_NN.mat');
+plot(tout, delta_phi, 'b-', 'LineWidth', 2.5, 'DisplayName', '${\Delta}_\phi$');
+plot(tout, delta_h_phi, 'r--', 'LineWidth', 2.5, 'DisplayName', '$\hat{\Delta}_\phi$');
+% title('Plot 1: Variable Comparison', 'Interpreter', 'latex', 'FontSize', 14);
+% xlabel('Time (s)', 'Interpreter', 'latex', 'FontSize', 34);
+ylabel('$\phi_{uncertainty}$', 'Interpreter', 'latex', 'FontSize', 22);
+grid on;
+legend('Location', 'best', 'Interpreter', 'latex', 'FontSize', 16);
+hold off;
+set(gca,  'TickLabelInterpreter', 'latex', 'FontSize', 22);
+
+% Second Plot
+nexttile;
+hold on;
+plot(tout, delta_theta, 'b-', 'LineWidth', 2.5, 'DisplayName', '${\Delta}_\theta$');
+plot(tout, delta_h_theta, 'r--', 'LineWidth', 2.5, 'DisplayName', '$\hat{\Delta}_\theta$');
+% title('Plot 2: Variable Comparison', 'Interpreter', 'latex', 'FontSize', 14);
+% xlabel('Time (s)', 'Interpreter', 'latex', 'FontSize', 24);
+ylabel('$\theta_{uncertainty}$', 'Interpreter', 'latex', 'FontSize', 22);
+grid on;
+legend('Location', 'best', 'Interpreter', 'latex', 'FontSize', 16);
+hold off;
+set(gca,  'TickLabelInterpreter', 'latex', 'FontSize', 22);
+
+% Third Plot
+nexttile;
+hold on;
+plot(tout, delta_psi, 'b-', 'LineWidth', 2.5, 'DisplayName', '${\Delta}_\psi$');
+plot(tout, delta_h_psi, 'r--', 'LineWidth', 2.5, 'DisplayName', '$\hat{\Delta}_\psi$');
+% title('Plot 3: Variable Comparison', 'Interpreter', 'latex', 'FontSize', 14);
+% xlabel('Time (s)', 'Interpreter', 'latex', 'FontSize', 22);
+ylabel('$\psi_{uncertainty}$', 'Interpreter', 'latex', 'FontSize', 22);
+grid on;
+legend('Location', 'best', 'Interpreter', 'latex', 'FontSize', 16);
+hold off;
+set(gca,  'TickLabelInterpreter', 'latex', 'FontSize', 22);
+
+% Forth Plot
+nexttile;
+hold on;
+plot(tout, delta_z, 'b-', 'LineWidth', 2.5, 'DisplayName', '${\Delta}_z$');
+plot(tout, delta_h_z, 'r--', 'LineWidth', 2.5, 'DisplayName', '$\hat{\Delta}_z$');
+% title('Plot 3: Variable Comparison', 'Interpreter', 'latex', 'FontSize', 14);
+xlabel('Time (s)', 'Interpreter', 'latex', 'FontSize', 22);
+ylabel('$z_{uncertainty}$', 'Interpreter', 'latex', 'FontSize', 22);
+grid on;
+legend('Location', 'best', 'Interpreter', 'latex', 'FontSize', 16);
+hold off;
+set(gca,  'TickLabelInterpreter', 'latex', 'FontSize', 22);
+
+
+% Adjust layout title if needed
+% t.Title.String = 'Comparison of Variables With and Without NN';
+t.Title.FontSize = 16;
+t.Title.Interpreter = 'latex';
