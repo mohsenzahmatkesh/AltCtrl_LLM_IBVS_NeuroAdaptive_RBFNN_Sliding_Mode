@@ -35,7 +35,7 @@ projection_z = -projection(:, [3, 6, 9, 12]);
 
 plot3(projection_x, projection_y, projection_z, 'r--', 'LineWidth', 3.5);
 
-legend('Reference Features', 'Initial Features', 'IBVS-SMC Using NN', '', '', '', 'IBVS-SMC Without NN','Interpreter', 'latex', 'FontSize', 16, 'Location', 'northwest');
+legend('Reference Features', 'Initial Features', 'IBVS-NNSMC', '', '', '', 'IBVS-SMC','Interpreter', 'latex', 'FontSize', 16, 'Location', 'northwest');
 xlabel('$X$', 'Interpreter', 'latex', 'FontSize', 22);
 ylabel('$Y$', 'Interpreter', 'latex', 'FontSize', 22);
 zlabel('$Z$ (m)', 'Interpreter', 'latex', 'FontSize', 22);

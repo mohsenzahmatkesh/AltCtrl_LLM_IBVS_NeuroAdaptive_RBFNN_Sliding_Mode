@@ -7,9 +7,9 @@ t = tiledlayout(3, 1, 'TileSpacing', 'compact', 'Padding', 'compact'); % Three p
 nexttile;
 hold on;
 load('Using_NN.mat');
-plot(tout, x, 'b-', 'LineWidth', 2.5, 'DisplayName', 'Using RBFNN');
+plot(tout, x, 'b-', 'LineWidth', 2.5, 'DisplayName', 'RBFNN-SMC');
 load("No_NN.mat")
-plot(tout, x, 'r--', 'LineWidth', 2.5, 'DisplayName', 'Without RBFNN');
+plot(tout, x, 'r--', 'LineWidth', 2.5, 'DisplayName', 'RBFNN');
 % title('Plot 1: Variable Comparison', 'Interpreter', 'latex', 'FontSize', 14);
 % xlabel('Time (s)', 'Interpreter', 'latex', 'FontSize', 34);
 ylabel('$X (m)$', 'Interpreter', 'latex', 'FontSize', 22);
