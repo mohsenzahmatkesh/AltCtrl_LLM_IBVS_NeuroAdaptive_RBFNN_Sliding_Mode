@@ -1,63 +1,87 @@
 close all
 figure;
 set(gcf, 'Position', [100, 100, 1000, 800]); % Adjust figure size
-t = tiledlayout(4, 1, 'TileSpacing', 'compact', 'Padding', 'compact'); % Three plots stacked vertically
+t = tiledlayout(4, 1, 'TileSpacing', 'compact', 'Padding', 'compact'); % Four plots stacked vertically
 
-% First Plot
+% ==========================================================
+% --- First Plot ---
 nexttile;
 hold on;
+
 load('Using_NN.mat');
-plot(tout, delta_phi, 'b-', 'LineWidth', 2.5, 'DisplayName', '${\Delta}_\phi$');
-plot(tout, delta_h_phi, 'r--', 'LineWidth', 2.5, 'DisplayName', '$\hat{\Delta}_\phi$');
-% title('Plot 1: Variable Comparison', 'Interpreter', 'latex', 'FontSize', 14);
-% xlabel('Time (s)', 'Interpreter', 'latex', 'FontSize', 34);
-ylabel('$\phi_{uncertainty}$', 'Interpreter', 'latex', 'FontSize', 22);
-grid on;
-legend('Location', 'best', 'Interpreter', 'latex', 'FontSize', 16);
-hold off;
-set(gca,  'TickLabelInterpreter', 'latex', 'FontSize', 22);
+% Red highlight + main lines
+plot(tout, delta_h_phi, '-', 'LineWidth', 15, 'Color', [0.7 0.4 0.4 0.15], 'HandleVisibility', 'off');
+h1 = plot(tout, delta_h_phi, '-', 'Color', [1 0 0], 'LineWidth', 2.5, 'DisplayName', '$\hat{\Delta}_\phi$');
 
-% Second Plot
+% Black dashed line
+h2 = plot(tout, delta_phi, 'k--', 'LineWidth', 2.5, 'DisplayName', '${\Delta}_\phi$');
+
+ylabel('$\mathrm{\phi-\hat{\phi}~(deg)}$', 'Interpreter', 'latex', 'FontSize', 22);
+grid on;
+hold off;
+set(gca, 'TickLabelInterpreter', 'latex', 'FontSize', 22);
+
+% ==========================================================
+% --- Second Plot ---
 nexttile;
 hold on;
-plot(tout, delta_theta, 'b-', 'LineWidth', 2.5, 'DisplayName', '${\Delta}_\theta$');
-plot(tout, delta_h_theta, 'r--', 'LineWidth', 2.5, 'DisplayName', '$\hat{\Delta}_\theta$');
-% title('Plot 2: Variable Comparison', 'Interpreter', 'latex', 'FontSize', 14);
-% xlabel('Time (s)', 'Interpreter', 'latex', 'FontSize', 24);
-ylabel('$\theta \ estimation$', 'Interpreter', 'latex', 'FontSize', 22);
-grid on;
-legend('Location', 'best', 'Interpreter', 'latex', 'FontSize', 16);
-hold off;
-set(gca,  'TickLabelInterpreter', 'latex', 'FontSize', 22);
 
-% Third Plot
+% Red highlight + main lines
+plot(tout, delta_h_theta, '-', 'LineWidth', 15, 'Color', [0.7 0.4 0.4 0.15], 'HandleVisibility', 'off');
+plot(tout, delta_h_theta, '-', 'Color', [1 0 0], 'LineWidth', 2.5, 'DisplayName', '$\hat{\Delta}_\theta$');
+
+% Black dashed line
+plot(tout, delta_theta, 'k--', 'LineWidth', 2.5, 'DisplayName', '${\Delta}_\theta$');
+
+ylabel('$\mathrm{\theta-\hat{\theta}~(deg)}$', 'Interpreter', 'latex', 'FontSize', 22);
+grid on;
+hold off;
+set(gca, 'TickLabelInterpreter', 'latex', 'FontSize', 22);
+
+% ==========================================================
+% --- Third Plot ---
 nexttile;
 hold on;
-plot(tout, delta_psi, 'b-', 'LineWidth', 2.5, 'DisplayName', '${\Delta}_\psi$');
-plot(tout, delta_h_psi, 'r--', 'LineWidth', 2.5, 'DisplayName', '$\hat{\Delta}_\psi$');
-% title('Plot 3: Variable Comparison', 'Interpreter', 'latex', 'FontSize', 14);
-% xlabel('Time (s)', 'Interpreter', 'latex', 'FontSize', 22);
-ylabel('$\psi_{uncertainty}$', 'Interpreter', 'latex', 'FontSize', 22);
-grid on;
-legend('Location', 'best', 'Interpreter', 'latex', 'FontSize', 16);
-hold off;
-set(gca,  'TickLabelInterpreter', 'latex', 'FontSize', 22);
 
-% Forth Plot
+% Red highlight + main lines
+plot(tout, delta_h_psi, '-', 'LineWidth', 15, 'Color', [0.7 0.4 0.4 0.15], 'HandleVisibility', 'off');
+plot(tout, delta_h_psi, '-', 'Color', [1 0 0], 'LineWidth', 2.5, 'DisplayName', '$\hat{\Delta}_\psi$');
+
+% Black dashed line
+plot(tout, delta_psi, 'k--', 'LineWidth', 2.5, 'DisplayName', '${\Delta}_\psi$');
+
+ylabel('$\mathrm{\psi-\hat{\psi}~(deg)}$', 'Interpreter', 'latex', 'FontSize', 22);
+grid on;
+hold off;
+set(gca, 'TickLabelInterpreter', 'latex', 'FontSize', 22);
+
+% ==========================================================
+% --- Fourth Plot ---
 nexttile;
 hold on;
-plot(tout, delta_z, 'b-', 'LineWidth', 2.5, 'DisplayName', '${\Delta}_z$');
-plot(tout, delta_h_z, 'r--', 'LineWidth', 2.5, 'DisplayName', '$\hat{\Delta}_z$');
-% title('Plot 3: Variable Comparison', 'Interpreter', 'latex', 'FontSize', 14);
-xlabel('Time (s)', 'Interpreter', 'latex', 'FontSize', 22);
-ylabel('$z_{uncertainty}$', 'Interpreter', 'latex', 'FontSize', 22);
+
+% Red highlight + main lines
+plot(tout, delta_h_z, '-', 'LineWidth', 15, 'Color', [0.9 0.4 0.4 0.25], 'HandleVisibility', 'off');
+plot(tout, delta_h_z, '-', 'Color', [1 0 0], 'LineWidth', 2.5, 'DisplayName', '$\hat{\Delta}_z$');
+
+% Black dashed line
+plot(tout, delta_z, 'k--', 'LineWidth', 2.5, 'DisplayName', '${\Delta}_z$');
+
+xlabel('$\mathrm{Time~(s)}$', 'Interpreter', 'latex', 'FontSize', 22);
+ylabel('$\mathrm{z-\hat{z}~(m)}$', 'Interpreter', 'latex', 'FontSize', 22);
 grid on;
-legend('Location', 'best', 'Interpreter', 'latex', 'FontSize', 16);
 hold off;
-set(gca,  'TickLabelInterpreter', 'latex', 'FontSize', 22);
+set(gca, 'TickLabelInterpreter', 'latex', 'FontSize', 22);
 
+% ==========================================================
+% --- Shared Legend Below ---
+lgd = legend([h2 h1], {'${\Delta}$', '$\hat{\Delta}$'}, ...
+    'Orientation', 'horizontal', 'Interpreter', 'latex', ...
+    'FontSize', 18, 'Box', 'off');
+lgd.Layout.Tile = 'south';
 
-% Adjust layout title if needed
-% t.Title.String = 'Comparison of Variables With and Without NN';
+% ==========================================================
+% --- Title Setup ---
+% t.Title.String = 'Comparison of Estimated and Actual Disturbances';
 t.Title.FontSize = 16;
 t.Title.Interpreter = 'latex';
