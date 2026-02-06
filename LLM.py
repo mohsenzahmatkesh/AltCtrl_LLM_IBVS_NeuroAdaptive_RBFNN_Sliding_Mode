@@ -1,70 +1,81 @@
-#!/usr/bin/env python3
-# -*- coding: utf-8 -*-
-"""
-Created on Wed Feb  4 15:16:42 2026
-
-@author: mohsen
-"""
-
 import time
 import os
 import scipy.io as sio
 import json
 from openai import OpenAI
 
-# SETUP: Local Ollama or OpenAI
+# 1. SETUP CLIENT
 client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
-MODEL = "deepseek-r1:70b" # DeepSeek is recommended for fast convergence [cite: 21, 406]
+# MATCH THIS EXACTLY TO YOUR 'ollama list' OUTPUT
+MODEL_NAME = "deepseek-r1:1.5b" 
+
+# Track history to identify if progress is stalled (LLMTerminator logic)
+history = []
 
 def call_llm_agent(data):
+    global history
+    history.append(data['SSE'])
+    if len(history) > 3: history.pop(0) # Keep last 3 iterations
+    
+    # The prompt now includes the trend to help the 'Critic' evaluate performance
     prompt = f"""
-    You are the Actor/Critic in a control optimization framework. [cite: 67]
-    Current SSE: {data['SSE']:.2f}, Max Error: {data['max_err']:.2f}, Kp: {data['Kp']:.2f}. [cite: 176]
-    If SSE is high, increase Kp. If chattering is present, adjust Kq. [cite: 173]
-    Return ONLY JSON: {{"Kp": float, "Kd": float, "Kq": float}} 
+    SYSTEM: Tethered Hexarotor IBVS.
+    GOAL: SSE < 0.2.
+    HISTORY (Last 3 SSE): {history}
+    CURRENT: SSE={data['SSE']:.2f}, Kp={data['Kp']:.2f}.
+    
+    TASK: If SSE is stalled or high, suggest a much higher Kp (Range 10-60). 
+    If chattering occurs, increase Kd.
+    
+    OUTPUT ONLY JSON: {{"Kp": float, "Kd": float, "Kq": float, "msg": "str"}}
     """
     try:
         response = client.chat.completions.create(
-            model=MODEL,
+            model=MODEL_NAME,
             messages=[{"role": "user", "content": prompt}],
-            response_format={ "type": "json_object" }
+            response_format={ "type": "json_object" },
+            timeout=12.0 
         )
         return json.loads(response.choices[0].message.content)
     except Exception as e:
-        print(f"LLM Error: {e}")
-        return None
+        print(f"  Agent Delay: {e}")
+        # Default safety action: Increment Kp if LLM fails
+        return {"Kp": data['Kp'] + 2.0, "Kd": 5.0, "Kq": 0.5, "msg": "Fallback"}
 
-print("LLM Bridge Active. Waiting for MATLAB telemetry...")
+print(f"Agentic Bridge Active using {MODEL_NAME}...")
 
 while True:
     if os.path.exists('telemetry.mat'):
         try:
-            # Load the .mat file
+            # Short wait to avoid 'truncated file' errors
+            time.sleep(0.1) 
             mat = sio.loadmat('telemetry.mat')
+            raw_tel = mat['tel'][0,0]
             
-            # ACCESS THE CORRECT KEY: 'stats_data'
-            raw_stats = mat['stats_data'][0,0]
-            
-            # Extract values precisely as floats
             telemetry = {
-                'SSE': float(raw_stats['SSE'].item()),
-                'max_err': float(raw_stats['max_err'].item()),
-                'Kp': float(raw_stats['Kp'].item())
+                'SSE': float(raw_tel['SSE'].item()),
+                'max_err': float(raw_tel['max_err'].item()),
+                'Kp': float(raw_tel['Kp'].item())
             }
             
-            print(f"Iteration Data: SSE={telemetry['SSE']:.2f}, Kp={telemetry['Kp']:.2f}") [cite: 172]
-            
-            # Get Agent Recommendation
+            # Agent Loop: Propose -> Evaluate (Actor-Critic)
             new_params = call_llm_agent(telemetry)
             
-            if new_params:
-                # Save as 'new_gains' for MATLAB
-                sio.savemat('gains_from_llm.mat', {'new_gains': new_params})
-                print(f"Action: Parameters refined. [cite: 173] Kp set to {new_params['Kp']}")
+            # Guardrail: Limit string length for MATLAB compatibility
+            sanitized = {
+                'Kp': float(new_params.get('Kp', 15.0)),
+                'Kd': float(new_params.get('Kd', 5.0)),
+                'Kq': float(new_params.get('Kq', 0.5)),
+                'reason': str(new_params.get('msg', 'tuning'))[:25]
+            }
+
+            sio.savemat('gains_from_llm.mat', {'new_gains': sanitized})
+            print(f"[Snapshot] SSE: {telemetry['SSE']:.2f} -> [Action] Suggested Kp: {sanitized['Kp']}")
             
-            os.remove('telemetry.mat') # Signal cycle completion [cite: 122]
+            os.remove('telemetry.mat')
             
         except Exception as e:
-            print(f"Bridge Processing Error: {e}")
+            if "truncated" not in str(e).lower():
+                print(f"Bridge Error: {e}")
             
-    time.sleep(2)
+    time.sleep(0.5) 
