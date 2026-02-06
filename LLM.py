@@ -10,58 +10,61 @@ import time
 import os
 import scipy.io as sio
 import json
-from openai import OpenAI # Or use Ollama client
+from openai import OpenAI
 
-# Setup client
-client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama") # Example for local Ollama
+# SETUP: Local Ollama or OpenAI
+client = OpenAI(base_url="http://localhost:11434/v1", api_key="ollama")
+MODEL = "deepseek-r1:70b" # DeepSeek is recommended for fast convergence [cite: 21, 406]
 
 def call_llm_agent(data):
-    """Refines controller parameters using heuristic optimization[cite: 114]."""
     prompt = f"""
-    You are an ACTOR in a multi-agent control framework.
-    Task: Optimize gains for an IBVS SMC Tethered Hexarotor[cite: 197].
-    
-    Current Telemetry:
-    - SSE: {data['SSE']}
-    - Max Error: {data['max_err']}
-    - Current Kp: {data['Kp']}
-    
-    Logic:
-    - If SSE is high, increase Kp for faster response.
-    - If chattering/vibration is suspected (High max error relative to SSE), increase Kd.
-    
-    Return ONLY a JSON: {{"Kp": float, "Kd": float, "Kq": float, "reasoning": "string"}}
+    You are the Actor/Critic in a control optimization framework. [cite: 67]
+    Current SSE: {data['SSE']:.2f}, Max Error: {data['max_err']:.2f}, Kp: {data['Kp']:.2f}. [cite: 176]
+    If SSE is high, increase Kp. If chattering is present, adjust Kq. [cite: 173]
+    Return ONLY JSON: {{"Kp": float, "Kd": float, "Kq": float}} 
     """
-    
-    response = client.chat.completions.create(
-        model="deepseek-r1:70b", # DeepSeek achieved fast convergence in research [cite: 21, 406]
-        messages=[{"role": "user", "content": prompt}],
-        response_format={ "type": "json_object" }
-    )
-    return json.loads(response.choices[0].message.content)
+    try:
+        response = client.chat.completions.create(
+            model=MODEL,
+            messages=[{"role": "user", "content": prompt}],
+            response_format={ "type": "json_object" }
+        )
+        return json.loads(response.choices[0].message.content)
+    except Exception as e:
+        print(f"LLM Error: {e}")
+        return None
 
 print("LLM Bridge Active. Waiting for MATLAB telemetry...")
 
 while True:
     if os.path.exists('telemetry.mat'):
         try:
-            # 1. Load data from MATLAB
-            mat_contents = sio.loadmat('telemetry.mat')
-            tel_data = mat_contents['tel'][0,0]
-            telemetry = {'SSE': float(tel_data[0]), 'max_err': float(tel_data[1]), 'Kp': float(tel_data[2])}
+            # Load the .mat file
+            mat = sio.loadmat('telemetry.mat')
             
-            # 2. Get LLM recommendation
-            print(f"Analyzing Snapshot at SSE: {telemetry['SSE']}...")
+            # ACCESS THE CORRECT KEY: 'stats_data'
+            raw_stats = mat['stats_data'][0,0]
+            
+            # Extract values precisely as floats
+            telemetry = {
+                'SSE': float(raw_stats['SSE'].item()),
+                'max_err': float(raw_stats['max_err'].item()),
+                'Kp': float(raw_stats['Kp'].item())
+            }
+            
+            print(f"Iteration Data: SSE={telemetry['SSE']:.2f}, Kp={telemetry['Kp']:.2f}") [cite: 172]
+            
+            # Get Agent Recommendation
             new_params = call_llm_agent(telemetry)
             
-            # 3. Save struct for MATLAB
-            sio.savemat('gains_from_llm.mat', {'new_gains': new_params})
-            print(f"Updated gains: Kp={new_params['Kp']}. Reasoning: {new_params['reasoning']}")
+            if new_params:
+                # Save as 'new_gains' for MATLAB
+                sio.savemat('gains_from_llm.mat', {'new_gains': new_params})
+                print(f"Action: Parameters refined. [cite: 173] Kp set to {new_params['Kp']}")
             
-            # Clean up to wait for next snapshot
-            os.remove('telemetry.mat')
+            os.remove('telemetry.mat') # Signal cycle completion [cite: 122]
             
         except Exception as e:
-            print(f"Error: {e}")
-    
+            print(f"Bridge Processing Error: {e}")
+            
     time.sleep(2)
