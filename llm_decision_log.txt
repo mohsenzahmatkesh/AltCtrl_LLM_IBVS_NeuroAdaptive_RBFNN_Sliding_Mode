@@ -1,0 +1,185 @@
+--- [20:54:07] ---
+METRICS: SSE=1449.58, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.5, Kq=0.8
+REASONING: Fallback: API Error
+
+--- [20:55:52] ---
+METRICS: SSE=1449.98, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=8.0, Kq=0.9
+REASONING: The SSE has not improved significantly in recent history, indicating a possible stall rather than co
+
+--- [20:56:40] ---
+METRICS: SSE=1449.98, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.5, Kq=0.8
+REASONING: Fallback: API Error
+
+--- [20:57:40] ---
+METRICS: SSE=1449.98, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.5, Kq=0.8
+REASONING: Fallback: API Error
+
+--- [20:58:07] ---
+METRICS: SSE=1449.98, MaxErr=0.0002
+ACTION: Suggested Kp=14.5, Kd=7.2, Kq=0.8
+REASONING: Adjusting proportional gain (Kp) from 15 to between 14-16 and introducing some damping (Kd) with low
+
+--- [20:58:33] ---
+METRICS: SSE=1449.98, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=6.5, Kq=0.7
+REASONING: The SSE has diverged from historical peaks, indicating system instability. The current gains may be
+
+--- [20:58:52] ---
+METRICS: SSE=1449.98, MaxErr=0.0002
+ACTION: Suggested Kp=16.0, Kd=7.0, Kq=1.0
+REASONING: The system has converged but is oscillating with a high SSE. Increasing Kp further reduces steady-st
+
+--- [20:59:35] ---
+METRICS: SSE=1449.98, MaxErr=0.0002
+ACTION: Suggested Kp=14.0, Kd=6.5, Kq=0.8
+REASONING: The SSE has risen significantly over time, indicating the system isn't converging as expected. Incre
+
+--- [21:00:23] ---
+METRICS: SSE=1449.98, MaxErr=0.0002
+ACTION: Suggested Kp=16.0, Kd=8.5, Kq=0.9
+REASONING: The high SSE and inconsistent reduction in error on the previous gain schedule may indicate issues w
+
+--- [21:00:46] ---
+METRICS: SSE=1449.98, MaxErr=0.0002
+ACTION: Suggested Kp=14.0, Kd=7.0, Kq=0.8
+REASONING: The high SSE indicates potential instability or disturbances causing sustained variation. Adjusting
+
+--- [21:01:08] ---
+METRICS: SSE=1449.98, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.0, Kq=0.8
+REASONING: The steady state error is minimized with low SSE after real-time adjustments due to decreased propor
+
+--- [21:01:22] ---
+METRICS: SSE=1449.98, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.5, Kq=0.8
+REASONING: tuning
+
+--- [21:01:52] ---
+METRICS: SSE=1449.98, MaxErr=0.0002
+ACTION: Suggested Kp=16.0, Kd=7.0, Kq=0.85
+REASONING: The system's SSE is increasing around the history, indicating an unstable control configuration. Low
+
+--- [21:02:40] ---
+METRICS: SSE=1449.99, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.5, Kq=0.8
+REASONING: Fallback: API Error
+
+--- [21:03:08] ---
+METRICS: SSE=1449.99, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.5, Kq=0.8
+REASONING: The system's steady-state error is too high, necessitating improved stabilization through increased
+
+--- [21:03:37] ---
+METRICS: SSE=1449.99, MaxErr=0.0002
+ACTION: Suggested Kp=14.0, Kd=6.75, Kq=0.85
+REASONING: The high SSE suggests a need to adjust the proportional gain to improve steady-state performance whi
+
+--- [21:04:04] ---
+METRICS: SSE=1449.99, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.5, Kq=0.8
+REASONING: tuning
+
+--- [21:04:55] ---
+METRICS: SSE=1449.99, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.5, Kq=0.8
+REASONING: Fallback: API Error
+
+--- [21:05:38] ---
+METRICS: SSE=1449.99, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.5, Kq=0.8
+REASONING: The system's SSE increased after adjusting the proportional gain of KP between 14 and 16, Kd between
+
+--- [21:06:25] ---
+METRICS: SSE=1449.99, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.5, Kq=0.8
+REASONING: Fallback: API Error
+
+--- [21:06:49] ---
+METRICS: SSE=1449.99, MaxErr=0.0002
+ACTION: Suggested Kp=14.0, Kd=6.5, Kq=0.7
+REASONING: Increasing the proportional gain to 14 and adjusting damping for stability, while lowering tether-in
+
+--- [21:07:40] ---
+METRICS: SSE=1449.99, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.5, Kq=0.8
+REASONING: Fallback: API Error
+
+--- [21:08:23] ---
+METRICS: SSE=1449.99, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.0, Kq=2.0
+REASONING: The SSE is too high, indicating poor proportional gains. Increasing Kp helps stabilize by providing
+
+--- [21:09:10] ---
+METRICS: SSE=1449.99, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.5, Kq=0.8
+REASONING: Fallback: API Error
+
+--- [21:09:52] ---
+METRICS: SSE=1449.99, MaxErr=0.0002
+ACTION: Suggested Kp=14.5, Kd=8.0, Kq=0.8
+REASONING: Analyzing SSE trend shows fluctuation close to an equilibrium suggesting potential convergence.
+
+--- [21:10:21] ---
+METRICS: SSE=1449.99, MaxErr=0.0002
+ACTION: Suggested Kp=14.0, Kd=8.0, Kq=3.0
+REASONING: The SSE fluctuates around ~1400 with a minimum of ~1296, suggesting steady-state convergence but not
+
+--- [21:10:52] ---
+METRICS: SSE=1449.99, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.0, Kq=1.0
+REASONING: The SSE is persistently high, suggesting a lack of convergence. It may be due to external bias in co
+
+--- [21:11:40] ---
+METRICS: SSE=1449.99, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.5, Kq=0.8
+REASONING: Fallback: API Error
+
+--- [21:12:22] ---
+METRICS: SSE=1449.99, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.5, Kq=0.8
+REASONING: tuning
+
+--- [21:22:34] ---
+METRICS: SSE=0.00, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.5, Kq=0.8
+REASONING: Fallback: API Error
+
+--- [21:23:34] ---
+METRICS: SSE=0.00, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.5, Kq=0.8
+REASONING: Fallback: API Error
+
+--- [21:24:02] ---
+METRICS: SSE=0.00, MaxErr=0.0002
+ACTION: Suggested Kp=14.5, Kd=7.5, Kq=0.8
+REASONING: The system has shown convergence, yet low SSE suggests potential external biases. Increasing Kp and
+
+--- [21:24:13] ---
+METRICS: SSE=0.00, MaxErr=0.0002
+ACTION: Suggested Kp=14.5, Kd=7.5, Kq=0.8
+REASONING: The SSE has significantly decreased from an initial level to 0, indicating a clear improvement in sy
+
+--- [21:25:05] ---
+METRICS: SSE=0.00, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.5, Kq=0.8
+REASONING: Fallback: API Error
+
+--- [21:25:45] ---
+METRICS: SSE=0.00, MaxErr=0.0002
+ACTION: Suggested Kp=16.0, Kd=8.0, Kq=0.8
+REASONING: The system shows minimal transient errors but high steady-state SSE due to oscillations and potentia
+
+--- [21:26:17] ---
+METRICS: SSE=0.00, MaxErr=0.0002
+ACTION: Suggested Kp=14.0, Kd=6.5, Kq=0.8
+REASONING: The SSE oscillates but is within the allowed threshold range after convergence. Kp adjusted to count
+
+--- [21:27:05] ---
+METRICS: SSE=0.00, MaxErr=0.0002
+ACTION: Suggested Kp=15.0, Kd=7.5, Kq=0.8
+REASONING: Fallback: API Error
+
