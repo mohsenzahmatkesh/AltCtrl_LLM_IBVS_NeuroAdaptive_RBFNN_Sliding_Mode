@@ -3,7 +3,7 @@ clear
 
 model = 'Altitude_SMCIBVS_RBFSMC';
 
-load_system(model);
+% load_system(model);
 
 for k = 1
     fprintf('Running simulation %d...\n', k);
@@ -52,11 +52,60 @@ for k = 1
     disp('Settling time (s):')
     disp(settle)
 
+    % ===================== SE DECAY METRICS =====================
+    t = tout(:);
+    se = abs(SE(:));                 % SE should be >=0, abs for safety
 
+    SE_decay = struct('peak',NaN,'t_peak',NaN,'tau',NaN,'t90',NaN,'t_settle2',NaN);
+
+    if numel(se) < 5
+        disp('SE decay metrics not meaningful (too short).');
+    else
+        se0 = se(1);
+
+        % 1) Peak error (early bump)
+        [SE_decay.peak, ip] = max(se);
+        SE_decay.t_peak = t(ip);
+
+        % 2) Time constant tau: first time SE <= 0.368*SE0
+        target_tau = 0.368 * se0;
+        itau = find(se <= target_tau, 1, 'first');
+        if ~isempty(itau)
+            SE_decay.tau = t(itau);
+        end
+
+        % 3) 90% decay time: first time SE <= 0.1*SE0
+        target_90 = 0.10 * se0;
+        i90 = find(se <= target_90, 1, 'first');
+        if ~isempty(i90)
+            SE_decay.t90 = t(i90);
+        end
+
+        % 4) 2% settling time: first time after which SE stays <= 0.02*SE0
+        target_settle = 0.02 * se0;
+        out = se > target_settle;
+        idx = find(out, 1, 'last');   % last time outside the band
+        if isempty(idx)
+            SE_decay.t_settle2 = 0;
+        elseif idx >= numel(t)
+            SE_decay.t_settle2 = t(end);
+        else
+            SE_decay.t_settle2 = t(idx+1);
+        end
+    end
+
+    disp('SE decay metrics:')
+    disp(SE_decay)
+    % ============================================================
+
+
+
+    
     save('ibvs_errors.mat', ...
-     'tout','SE','SSE', ...
-     'x1_err','y1_err','x2_err','y2_err','x3_err','y3_err','x4_err','y4_err', ...
-     'overshoot','settle');
+         'tout','SE','SSE', ...
+         'x1_err','y1_err','x2_err','y2_err','x3_err','y3_err','x4_err','y4_err', ...
+         'overshoot','settle','SE_decay');
+
 
 
 

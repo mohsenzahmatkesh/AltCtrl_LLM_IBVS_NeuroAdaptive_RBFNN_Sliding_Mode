@@ -74,17 +74,6 @@ response = client.chat.completions.create(
     messages=[{"role": "user", "content": prompt}]
 )
 
-# ---- FORMAT CHECK GOES HERE ----
-txt = response.choices[0].message.content.strip()
-lines = [ln.strip() for ln in txt.splitlines() if ln.strip()]
+print(response.choices[0].message.content)
 
-ok = (len(lines) == 5) and all(len(ln.split()) == 4 for ln in lines)
-
-if not ok:
-    print("Bad format from LLM:\n", txt)
-    raise ValueError("LLM did not return 5 lines of 't_start Kp Kd Kq'")
-
-# If format is correct, print it
-print("Valid LUT:")
-print(txt)
 
