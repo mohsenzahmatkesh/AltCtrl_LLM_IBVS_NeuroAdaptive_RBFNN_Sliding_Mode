@@ -1,63 +1,69 @@
 close all;
 figure;
-set(gcf, 'Position', [100, 100, 1400, 900]); % Wider figure for two columns
+set(gcf, 'Position', [100, 100, 1500, 900]); 
 t = tiledlayout(3, 2, 'TileSpacing', 'compact', 'Padding', 'compact');
 
-% Define file groups for clarity
-% Column 1: No Low Pass Filter
-files_col1 = {'No_NN_NO_LPF.mat', 'Using_NN_NO_LPF.mat'}; 
-% Column 2: With Low Pass Filter
-files_col2 = {'No_NN_LPF.mat', 'Using_NN_LPF.mat'}; 
+% Define Files
+f1 = 'Using_NN_LPF.mat';    % Filtered RBFNN
+f2 = 'Using_NN_NO_LPF.mat'; % RBFNN
+f3 = 'No_NN_LPF.mat';       % Filtered IBVS
+f4 = 'No_NN_NO_LPF.mat';    % IBVS
+
+% --- Color Definitions ---
+% Left Column (Intelligent)
+c1 = [0.15, 0.45, 0.75];      % Medium Blue   (Filtered RBFNN - TOP)
+c2 = [0.85, 0.20, 0.20];      % Medium Purple (RBFNN - BOTTOM)
+
+% Right Column (Baseline)
+c3 = [0.60, 0.30, 0.75];      % Medium Red    (Filtered IBVS - TOP)
+c4 = [0.55, 0.55, 0.55];      % Slate Gray    (IBVS - BOTTOM)
 
 signals = {'phi', 'theta', 'psi'};
-y_labels = {'$\phi~(deg)$', '$\theta~(deg)$', '$\psi~(deg)$'};
-col_titles = {'Without Low Pass Filter', 'With Low Pass Filter'};
+y_labels = {'$\mathrm{\phi~(deg)}$', '$\mathrm{\theta~(deg)}$', '$\mathrm{\psi~(deg)}$'};
 
 for row = 1:3
     for col = 1:2
         nexttile;
         hold on;
         
-        % Determine which files to load based on column
         if col == 1
-            current_files = files_col1;
+            % --- Left Column: RBFNN Variants ---
+            data1 = load(f1); data2 = load(f2);
+            
+            % Plot c2 (Bottom) first, then c1 (Top)
+            h2 = plot(data2.tout, data2.(signals{row}), 'Color', c2, 'LineWidth', 2.5, ...
+                'DisplayName', 'RBFNN-IBVS-SMC');
+            h1 = plot(data1.tout, data1.(signals{row}), 'Color', c1, 'LineWidth', 3, ...
+                'DisplayName', 'Filtered RBFNN-IBVS-SMC');
+            
+            if row == 1, title('Intelligent Control', 'Interpreter', 'latex', 'FontSize', 18); end
         else
-            current_files = files_col2;
+            % --- Right Column: Standard SMC Variants ---
+            data3 = load(f3); data4 = load(f4);
+            
+            % Plot c4 (Bottom) first, then c3 (Top)
+            h4 = plot(data4.tout, data4.(signals{row}), 'Color', c4, 'LineWidth', 2.5, ...
+                'DisplayName', 'IBVS-SMC');
+            h3 = plot(data3.tout, data3.(signals{row}), 'Color', c3, 'LineWidth', 3, ...
+                'DisplayName', 'Filtered IBVS-SMC');
+                
+            if row == 1, title('Baseline Control', 'Interpreter', 'latex', 'FontSize', 18); end
         end
         
-        % 1. Plot Baseline (IBVS-SMC) - Red
-        data_base = load(current_files{1});
-        plot(data_base.tout, data_base.(signals{row}), '-', 'LineWidth', 12, ...
-            'Color', [0.7 0.4 0.4 0.15], 'HandleVisibility', 'off'); % Glow
-        h1 = plot(data_base.tout, data_base.(signals{row}), '-', 'Color', [1 0 0], ...
-            'LineWidth', 2.2, 'DisplayName', 'IBVS-SMC');
-        
-        % 2. Plot Proposed (RBF-NN-IBVS-SMC) - Blue
-        data_nn = load(current_files{2});
-        h2 = plot(data_nn.tout, data_nn.(signals{row}), '-', 'Color', [0 0.3 1], ...
-            'LineWidth', 3.5, 'DisplayName', 'RBFNN-IBVS-SMC');
-        
-        % --- Formatting ---
+        % Formatting
         grid on;
         ylabel(y_labels{row}, 'Interpreter', 'latex', 'FontSize', 20);
-        set(gca, 'TickLabelInterpreter', 'latex', 'FontSize', 18);
-        
-        % Add column titles to the top row only
-        if row == 1
-            title(col_titles{col}, 'Interpreter', 'latex', 'FontSize', 20);
-        end
-        
-        % Add X-label to the bottom row only
+        set(gca, 'TickLabelInterpreter', 'latex', 'FontSize', 16);
         if row == 3
             xlabel('$\mathrm{Time~(s)}$', 'Interpreter', 'latex', 'FontSize', 20);
         end
-        
         hold off;
     end
 end
 
-% Global Legend at the top
-lgd = legend([h2 h1], {'RBFNN-IBVS-SMC','IBVS-SMC'}, ...
+% Global Legend
+lgd = legend([h1 h2 h3 h4], ...
+    {'Filtered RBFNN-IBVS-SMC', 'RBFNN-IBVS-SMC', 'Filtered IBVS-SMC', 'IBVS-SMC'}, ...
     'Orientation','horizontal', 'Interpreter','latex', ...
-    'FontSize',20, 'Box','off');
+    'FontSize',18, 'Box','off', 'NumColumns', 2);
 lgd.Layout.Tile = 'north';
