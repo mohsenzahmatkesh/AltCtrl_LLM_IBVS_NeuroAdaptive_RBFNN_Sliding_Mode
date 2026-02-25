@@ -1,75 +1,63 @@
-close all
+close all;
 figure;
-set(gcf, 'Position', [100, 100, 1000, 800]); % Adjust figure size
-t = tiledlayout(3, 1, 'TileSpacing', 'compact', 'Padding', 'compact'); % Three plots stacked vertically
+set(gcf, 'Position', [100, 100, 1400, 900]); % Wider figure for two columns
+t = tiledlayout(3, 2, 'TileSpacing', 'compact', 'Padding', 'compact');
 
-% ==========================================================
-% --- First Plot ---
-nexttile;
-hold on;
+% Define file groups for clarity
+% Column 1: No Low Pass Filter
+files_col1 = {'No_NN_NO_LPF.mat', 'Using_NN_NO_LPF.mat'}; 
+% Column 2: With Low Pass Filter
+files_col2 = {'No_NN_LPF.mat', 'Using_NN_LPF.mat'}; 
 
-load('No_NN.mat');
-% Red highlight + main line
-plot(tout, phi, '-', 'LineWidth', 15, 'Color', [0.7 0.4 0.4 0.15], 'HandleVisibility', 'off');
-h1 = plot(tout, phi, '-', 'Color', [1 0 0], 'LineWidth', 2.5, 'DisplayName', 'IBVS-SMC');
+signals = {'phi', 'theta', 'psi'};
+y_labels = {'$\phi~(deg)$', '$\theta~(deg)$', '$\psi~(deg)$'};
+col_titles = {'Without Low Pass Filter', 'With Low Pass Filter'};
 
-load('Using_NN.mat');
-% Blue highlight + main line
-% plot(tout, phi, '-', 'LineWidth', 12, 'Color', [0.3 0.6 1 0.25], 'HandleVisibility', 'off'); % soft glow
-h2 = plot(tout, phi, '-', 'Color', [0 0.3 1], 'LineWidth', 4.5, 'DisplayName', 'RBF-NN-IBVS-SMC');
+for row = 1:3
+    for col = 1:2
+        nexttile;
+        hold on;
+        
+        % Determine which files to load based on column
+        if col == 1
+            current_files = files_col1;
+        else
+            current_files = files_col2;
+        end
+        
+        % 1. Plot Baseline (IBVS-SMC) - Red
+        data_base = load(current_files{1});
+        plot(data_base.tout, data_base.(signals{row}), '-', 'LineWidth', 12, ...
+            'Color', [0.7 0.4 0.4 0.15], 'HandleVisibility', 'off'); % Glow
+        h1 = plot(data_base.tout, data_base.(signals{row}), '-', 'Color', [1 0 0], ...
+            'LineWidth', 2.2, 'DisplayName', 'IBVS-SMC');
+        
+        % 2. Plot Proposed (RBF-NN-IBVS-SMC) - Blue
+        data_nn = load(current_files{2});
+        h2 = plot(data_nn.tout, data_nn.(signals{row}), '-', 'Color', [0 0.3 1], ...
+            'LineWidth', 3.5, 'DisplayName', 'RBFNN-IBVS-SMC');
+        
+        % --- Formatting ---
+        grid on;
+        ylabel(y_labels{row}, 'Interpreter', 'latex', 'FontSize', 20);
+        set(gca, 'TickLabelInterpreter', 'latex', 'FontSize', 18);
+        
+        % Add column titles to the top row only
+        if row == 1
+            title(col_titles{col}, 'Interpreter', 'latex', 'FontSize', 20);
+        end
+        
+        % Add X-label to the bottom row only
+        if row == 3
+            xlabel('$\mathrm{Time~(s)}$', 'Interpreter', 'latex', 'FontSize', 20);
+        end
+        
+        hold off;
+    end
+end
 
-ylabel('$\mathrm{\phi~(deg)}$', 'Interpreter', 'latex', 'FontSize', 22);
-grid on;
-hold off;
-set(gca, 'TickLabelInterpreter', 'latex', 'FontSize', 22);
-
-% ==========================================================
-% --- Second Plot ---
-nexttile;
-hold on;
-
-load('No_NN.mat');
-plot(tout, theta, '-', 'LineWidth', 15, 'Color', [0.7 0.4 0.4 0.15], 'HandleVisibility', 'off');
-plot(tout, theta, '-', 'Color', [1 0 0], 'LineWidth', 2.5, 'DisplayName', 'IBVS-SMC');
-
-load('Using_NN.mat');
-% plot(tout, theta, '-', 'LineWidth', 8, 'Color', [0.3 0.6 1 0.25], 'HandleVisibility', 'off');
-plot(tout, theta, '-', 'Color', [0 0.3 1], 'LineWidth', 4.5, 'DisplayName', 'RBF-NN-IBVS-SMC');
-
-ylabel('$\mathrm{\theta~(deg)}$', 'Interpreter', 'latex', 'FontSize', 22);
-grid on;
-hold off;
-set(gca, 'TickLabelInterpreter', 'latex', 'FontSize', 22);
-
-% ==========================================================
-% --- Third Plot ---
-nexttile;
-hold on;
-
-load('No_NN.mat');
-plot(tout, psi, '-', 'LineWidth', 15, 'Color', [0.7 0.4 0.4 0.15], 'HandleVisibility', 'off');
-plot(tout, psi, '-', 'Color', [1 0 0], 'LineWidth', 2.5, 'DisplayName', 'IBVS-SMC');
-
-load('Using_NN.mat');
-% plot(tout, psi, '-', 'LineWidth', 8, 'Color', [0.3 0.6 1 0.25], 'HandleVisibility', 'off');
-plot(tout, psi, '-', 'Color', [0 0.3 1], 'LineWidth', 4.5, 'DisplayName', 'RBF-NN-IBVS-SMC');
-
-xlabel('$\mathrm{Time~(s)}$', 'Interpreter', 'latex', 'FontSize', 22);
-ylabel('$\mathrm{\psi~(deg)}$', 'Interpreter', 'latex', 'FontSize', 22);
-grid on;
-hold off;
-set(gca, 'TickLabelInterpreter', 'latex', 'FontSize', 22);
-
-% ==========================================================
-ax = findall(gcf, 'Type', 'Axes'); % find all subplots
-% --- Shared Legend Below ---
-lgd = legend(ax(end),[h2 h1], {'RBF-NN-IBVS-SMC', 'IBVS-SMC'}, ...
-    'Orientation', 'horizontal', 'Interpreter', 'latex', ...
-    'FontSize', 18, 'Box', 'off');
+% Global Legend at the top
+lgd = legend([h2 h1], {'RBFNN-IBVS-SMC','IBVS-SMC'}, ...
+    'Orientation','horizontal', 'Interpreter','latex', ...
+    'FontSize',20, 'Box','off');
 lgd.Layout.Tile = 'north';
-
-% ==========================================================
-% --- Title Setup ---
-% t.Title.String = 'Comparison of Attitude Angles With and Without NN';
-t.Title.FontSize = 16;
-t.Title.Interpreter = 'latex';
