@@ -1,13 +1,13 @@
 clc
-clear
+% clear
 
-model = 'Altitude_SMCIBVS_RBFSMC';
+% model = 'Altitude_SMCIBVS_RBFSMC';
 
 % load_system(model);
 
 for k = 1
     fprintf('Running simulation %d...\n', k);
-    sim(model);
+    % sim(model);
     errs = {x1_err,y1_err,x2_err,y2_err,x3_err,y3_err,x4_err,y4_err};
     names = {'x1','y1','x2','y2','x3','y3','x4','y4'};
 
@@ -101,16 +101,16 @@ for k = 1
 
 
     
-    save('ibvs_errors.mat', ...
-         'tout','SE','SSE', ...
-         'x1_err','y1_err','x2_err','y2_err','x3_err','y3_err','x4_err','y4_err', ...
-         'overshoot','settle','SE_decay');
+    % save('ibvs_errors.mat', ...
+    %      'tout','SE','SSE', ...
+    %      'x1_err','y1_err','x2_err','y2_err','x3_err','y3_err','x4_err','y4_err', ...
+    %      'overshoot','settle','SE_decay');
 
 
 
 
 end
 
-close_system(model, 0);
-clear 
-load("ibvs_errors.mat")
+% close_system(model, 0);
+% clear 
+% load("ibvs_errors.mat")
