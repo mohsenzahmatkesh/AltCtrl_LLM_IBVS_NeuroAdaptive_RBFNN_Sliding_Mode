@@ -8,6 +8,12 @@ clc
 for k = 1
     fprintf('Running simulation %d...\n', k);
     % sim(model);
+    disp('Kp:')
+    disp(Kp(1,1))
+    disp('Kd:')
+    disp(Kd(1,1))
+    disp('Kq:')
+    disp(Kq(1,1))
     errs = {x1_err,y1_err,x2_err,y2_err,x3_err,y3_err,x4_err,y4_err};
     names = {'x1','y1','x2','y2','x3','y3','x4','y4'};
 
@@ -96,6 +102,10 @@ for k = 1
 
     disp('SE decay metrics:')
     disp(SE_decay)
+    disp('SSE:')
+    disp(SSE(end))
+    disp('Desired Altitude:')
+    disp(d_final(end))
     % ============================================================
 
 
