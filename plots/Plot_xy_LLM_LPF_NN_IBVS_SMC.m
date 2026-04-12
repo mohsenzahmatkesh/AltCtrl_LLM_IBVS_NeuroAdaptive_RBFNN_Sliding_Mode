@@ -1,6 +1,6 @@
 close all;
 figure;
-set(gcf,'Position',[100,100,1800,1400]);
+set(gcf,'Position',[100,100,1500,1100]);
 t = tiledlayout(4,2,'TileSpacing','compact','Padding','compact');
 
 fileGroups = {
@@ -65,39 +65,51 @@ globalColorIdx = {
     [8 9]
 };
 
+legendHandles = [];
+legendTexts = {};
+
 for r = 1:4
     for c = 1:2
-        ax(r,c) = nexttile;
-        hold(ax(r,c),'on')
+        nexttile;
+        hold on;
 
         files_this_group = fileGroups{r};
+        labels_this_group = legendGroups{r};
         color_idx_this_group = globalColorIdx{r};
 
-        h = gobjects(1,length(files_this_group));
+        localHandles = gobjects(1,length(files_this_group));
 
         for i = 1:length(files_this_group)
             data = load(files_this_group{i});
-            h(i) = plot(ax(r,c), data.tout, data.(signals{c}), ...
-                'Color', colors(color_idx_this_group(i),:), 'LineWidth', 3);
+            localHandles(i) = plot(data.tout, data.(signals{c}), ...
+                'Color', colors(color_idx_this_group(i),:), 'LineWidth', 2.5);
         end
 
-        grid(ax(r,c),'on')
-        ylabel(ax(r,c), ylabels{c}, 'Interpreter','latex', 'FontSize',30)
-        set(ax(r,c), 'TickLabelInterpreter','latex', 'FontSize',24)
-        title(ax(r,c), sprintf('$z_d=%g~(\\mathrm{m})$', titles_z(r)), ...
-            'Interpreter','latex', 'FontSize',28)
+        if c == 1
+            legendHandles = [legendHandles localHandles];
+            legendTexts = [legendTexts labels_this_group];
+        end
+
+        grid on
+        ylabel(ylabels{c},'Interpreter','latex','FontSize',24)
+        set(gca,'TickLabelInterpreter','latex','FontSize',24)
+        title(sprintf('$z_d=%g~(\\mathrm{m})$', titles_z(r)), ...
+            'Interpreter','latex','FontSize',24)
 
         if r == 4
-            xlabel(ax(r,c), '$\mathrm{Time~(s)}$', 'Interpreter','latex', 'FontSize',30)
+            xlabel('$\mathrm{Time~(s)}$','Interpreter','latex','FontSize',24)
         end
 
-        hold(ax(r,c),'off')
+        hold off
     end
 end
 
-lgd = legend(ax(1,1), h, legendGroups{4}, ...
+lgd = legend(legendHandles,legendTexts, ...
+    'Orientation','horizontal', ...
     'Interpreter','latex', ...
-    'FontSize',16, ...
-    'Orientation','horizontal');
-
+    'FontSize',22, ...
+    'Box','off', ...
+    'NumColumns',2);
 lgd.Layout.Tile = 'north';
+
+print(gcf,'/home/mohsen/AltitudeCtrl_IBVS_Neuro_Sliding_Mode/plots/XY_Comparison_All_Z.eps','-depsc','-r300');

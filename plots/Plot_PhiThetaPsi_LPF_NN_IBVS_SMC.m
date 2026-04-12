@@ -43,7 +43,7 @@ for row = 1:3
     end
 end
 
-lgd = legend([h1 h2 h3 h4],{'Filtered RBFNN-IBVS-SMC','RBFNN-IBVS-SMC','Filtered IBVS-SMC','IBVS-SMC'},'Orientation','horizontal','Interpreter','latex','FontSize',22,'Box','off','NumColumns',2);
+lgd = legend([h1 h2 h3 h4],{'OBS$-$RBFNN$-$IBVS$-$SMC','RBFNN$-$IBVS$-$SMC','OBS$-$IBVS$-$SMC','IBVS$-$SMC'},'Orientation','horizontal','Interpreter','latex','FontSize',22,'Box','off','NumColumns',2);
 lgd.Layout.Tile = 'north';
 
 outname = '/home/mohsen/AltitudeCtrl_IBVS_Neuro_Sliding_Mode/plots/PhiThetaPsi_Control_Comparison.eps';
